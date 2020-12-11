@@ -1,0 +1,137 @@
+{% extends "body.html" %}
+
+{% if successtoast %}
+    {% block toast %}
+        <!-- Toast -->
+        <div class="toast bg-green" id="success-toast" role="alert">
+            <div class="toast-header">
+                <i class="rounded me-2 fa fa-book"></i>
+                <strong class="me-auto">Bookmark Manager</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{ successtoast }}
+            </div>
+        </div>
+    {% endblock %}
+{% endif %}
+
+{% block body %}
+    <!-- Search Form -->
+    <div class="container first-container">
+        <form action="{% url 'bookmarks:index' %}" method="post">
+            {% csrf_token %}
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="tag:<TAGNAME> OR <TAGNAME> OR <KEYWORD>"
+                       aria-label="tag:<TAGNAME> OR <TAGNAME> OR <KEYWORD>"
+                       aria-describedby="button-search" name="search">
+                <button class="btn btn-outline-secondary" type="submit" id="button-search">Search / Clear filter
+                </button>
+                <button class="btn btn-primary" type="button" id="button-create" data-bs-toggle="modal"
+                        data-bs-target="#createModal">Create Bookmark
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{% url 'bookmarks:create' %}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Create Bookmark</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Name" name="name">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-link"></i></span>
+                            <input type="text" class="form-control" placeholder="https://" name="link">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Description</span>
+                            <textarea class="form-control" name="description"></textarea>
+                        </div>
+
+                        {% for tag in tags.all %}
+                            <input type="checkbox" class="btn-check" id="btn-check-{{ tag.id }}-outlined"
+                                   autocomplete="off" name="checked-{{ tag.id }}">
+                            <label class="btn btn-outline-secondary"
+                                   for="btn-check-{{ tag.id }}-outlined">{{ tag.tag_name }}</label>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create Bookmark</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warnings -->
+    {% if warning %}
+        <div class="container">
+            <div class="alert alert-warning" role="alert">
+                {{ warning }}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Cards -->
+    <div class="container">
+        <div class="row">
+            {% for link in links %}
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-header">
+                            {% for tag in link.tags.all %}
+                                <a href="{% url 'bookmarks:tag' tag.id %}"><span
+                                        class="badge bg-secondary">{{ tag }}</span></a>
+                            {% endfor %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ link.name }}</h5>
+                            <p class="card-text">{{ link.description }}</p>
+                            <a href="{{ link.link }}" target="blank" class="btn btn-primary">Link</a>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col">
+                                    <a class="delete-link inline hide"
+                                       href="{% url 'bookmarks:delete_bookmark' link.id %}"><i
+                                            class="fa fa-trash"></i></a>
+                                    <a class="edit-link inline hide" href="#"><i
+                                            class="fa fa-pencil"></i></a>
+                                    <a class="archive-link inline hide" href="{% url 'bookmarks:archive_bookmark' link.id %}"><i
+                                            class="fa fa-archive"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if successtoast %}
+        <script>
+            $(document).ready(function () {
+                const toastElList = [].slice.call(document.querySelectorAll('.toast'))
+                const toastList = toastElList.map(function (toastEl) {
+                    // Creates an array of toasts (it only initializes them)
+                    return new bootstrap.Toast(toastEl, {delay: 10000}) // No need for options; use the default options
+                });
+                const successToast = toastList[0];
+                successToast.show();
+            });
+        </script>
+    {% endif %}
+{% endblock %}

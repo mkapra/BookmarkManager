@@ -1,0 +1,71 @@
+.first-container {
+    margin-top: 10px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+.card-footer {
+    height: 40px;
+}
+
+.badge:hover {
+    background: darkblue !important;
+}
+
+.hide {
+    display: none;
+}
+
+.card:hover .hide {
+    display: block;
+}
+
+#success-toast {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    margin: 20px;
+    padding: 5px;
+}
+
+.delete-link {
+    text-decoration: none;
+    color: black;
+    float: left;
+    padding-right: 10px;
+}
+
+.delete-link:hover {
+    color: red;
+}
+
+.edit-link {
+    text-decoration: none;
+    color: black;
+    float: left;
+    padding-right: 10px;
+}
+
+.edit-link:hover {
+    color: darkgoldenrod;
+}
+
+.archive-link {
+    text-decoration: none;
+    color: black;
+    float: left;
+}
+
+.archive-link:hover {
+    color: darkgrey;
+}
+
+.bg-red {
+    background: red;
+}
+
+.bg-green {
+    background: green;
+}
