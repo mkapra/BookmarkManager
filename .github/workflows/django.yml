@@ -21,12 +21,14 @@ jobs:
         python-version: ${{ matrix.python-version }}
       env:
         DJANGO_KEY: ${{ secrets.DJANGO_SECRET }}
+
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
       env:
         DJANGO_SECRET: ${{ secrets.DJANGO_SECRET }}
+
     - name: Run Tests
       run: |
         python manage.py test
