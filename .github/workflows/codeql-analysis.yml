@@ -10,9 +10,9 @@ on:
 
 jobs:
   analyze:
-    if: github.actor != 'dependabot[bot]' || github.actor != 'dependabot-preview[bot]'
     name: Analyze
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]' || github.actor != 'dependabot-preview[bot]'
 
     strategy:
       fail-fast: false
